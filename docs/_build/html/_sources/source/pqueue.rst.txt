@@ -1,0 +1,7 @@
+pqueue module
+=============
+
+.. automodule:: pqueue
+    :members:
+    :undoc-members:
+    :show-inheritance:

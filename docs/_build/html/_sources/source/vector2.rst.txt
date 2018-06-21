@@ -1,0 +1,7 @@
+vector2 module
+==============
+
+.. automodule:: vector2
+    :members:
+    :undoc-members:
+    :show-inheritance:
