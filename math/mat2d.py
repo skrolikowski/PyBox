@@ -1,11 +1,10 @@
 import copy
-import math
-
+from math import cos, sin, radians
 from pybox.math import vec2d, util
 
 
-class Matrix:
-    def __init__(self, rows = 4, cols = 4):
+class Mat2d:
+    def __init__(self, rows = 3, cols = 3):
         self.matx = Matrix.identity(rows, cols)
         self.rows = rows
         self.cols = cols
@@ -19,64 +18,60 @@ class Matrix:
 
         return copy.deepcopy(self)
 
-    def translate(self, tx, ty, tz=0):
-        assert self.rows == 4 and self.cols == 4, 'Translations require a 4x4 matrix.'
+    def translate(self, tx, ty):
+        assert self.rows == 3 and self.cols == 3, ' 2D translations require a 3x3 matrix.'
 
         tmp = Matrix()
-        tmp.matx = Matrix.identity(4, 4)
+        tmp.matx = Matrix.identity(3, 3)
 
-        tmp.matx[0][3] = tx
-        tmp.matx[1][3] = ty
-        tmp.matx[2][3] = tz
+        tmp.matx[0][2] = tx
+        tmp.matx[1][2] = ty
 
         self.matx = Matrix.mul(self, tmp)
 
         return self
 
-    def scale(self, sx, sy, sz=1):
-        assert self.rows == 4 and self.cols == 4, 'Scaling require a 4x4 matrix.'
+    def scale(self, sx, sy):
+        assert self.rows == 3 and self.cols == 3, '2D scaling require a 3x3 matrix.'
 
         tmp = Matrix()
-        tmp.matx = Matrix.identity(4, 4)
+        tmp.matx = Matrix.identity(3, 3)
 
         tmp.matx[0][0] = sx
         tmp.matx[1][1] = sy
-        tmp.matx[2][2] = sz
 
         self.matx = Matrix.mul(self, tmp)
 
         return self
 
-    def rotate(self, angle, x=0, y=0, z=1):
-        assert self.rows == 4 and self.cols == 4, 'Rotations require a 4x4 matrix.'
+    def rotate(self, angle):
+        assert self.rows == 3 and self.cols == 3, '2D rotations require a 3x3 matrix.'
 
         tmp = Matrix()
-        tmp.matx = Matrix.identity(4, 4)
+        tmp.matx = Matrix.identity(3, 3)
 
-        r = -math.radians(angle)
-        c = math.cos(r)
-        s = math.sin(r)
-        o = 1.0 - c
+        c = round(cos(angle), 5)
+        s = round(sin(angle), 5)
 
-        tmp.matx[0][0] = x * o + c
-        tmp.matx[0][1] = x * y * o - z * s
-        tmp.matx[0][2] = x * z * o + y * s
-        tmp.matx[1][0] = y * x * o + z * s
-        tmp.matx[1][1] = y * o + c
-        tmp.matx[1][2] = y * z * o - x * s
-        tmp.matx[2][0] = x * z * o - y * s
-        tmp.matx[2][1] = y * z * o + x * s
-        tmp.matx[2][2] = z * o + c
+        tmp.matx[0][0] = c
+        tmp.matx[1][1] = c
+
+        if angle < 0:
+            tmp.matx[0][1] = -s
+            tmp.matx[1][0] = s
+        else:
+            tmp.matx[0][1] = s
+            tmp.matx[1][0] = -s
 
         self.matx = Matrix.mul(self, tmp)
 
         return self
 
     def shear(self, kx, ky):
-        assert self.rows == 4 and self.cols == 4, 'Shearing require a 4x4 matrix.'
+        assert self.rows == 3 and self.cols == 3, '2D Shearing require a 3x3 matrix.'
 
         tmp = Matrix()
-        tmp.matx = Matrix.identity(4, 4)
+        tmp.matx = Matrix.identity(3, 3)
 
         tmp.matx[0][1] = kx
         tmp.matx[1][0] = ky
@@ -86,7 +81,7 @@ class Matrix:
         return self
 
     def reflect(self):
-        return self.rotate(math.radians(180))
+        return self.rotate(radians(180))
 
     def getRow(self, r):
         """Get a list of element in the `r` row.
@@ -120,11 +115,11 @@ class Matrix:
         """Matrix multiplication.
         Matrices can be multiplied by:
           - scalar value (int or float)
-          - Vec2D
+          - Vec2d
           - another Matrix
 
         Raises:
-            AttributeError: Attribute `b` either must be a scalar value, Vec2D or another Matrix.
+            AttributeError: Attribute `b` either must be a scalar value, Vec2d or another Matrix.
             ArithmeticError: First Matrix column count doesn't match second Matrix row count.
 
         Args:
@@ -134,8 +129,8 @@ class Matrix:
         Return mixed
         """
 
-        if type(b) == vec2d.Vec2D:
-            result = vec2d.Vec2D(
+        if type(b) == vec2d.Vec2d:
+            result = vec2d.Vec2d(
                 util.dot(a.getRow(0), [b.unpack(), 1]),
                 util.dot(a.getRow(1), [b.unpack(), 1])
             )
@@ -159,7 +154,7 @@ class Matrix:
                 for c in range(a.cols):
                     result[r][c] = a.matx[r][c] * b
         else:
-            raise AttributeError("Attribute either must be a scalar value, Vec2D or another Matrix.")
+            raise AttributeError("Attribute either must be a scalar value, Vec2d or another Matrix.")
 
         return result
 
