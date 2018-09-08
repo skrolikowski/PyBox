@@ -2,19 +2,7 @@ from pybox.math.matrix import Matrix
 
 class Transform:
     def __init__(self, x=0, y=0, z=1, angle=0, sx=1, sy=1, sz=1, kx=0, ky=0):
-        self._matrix = Matrix()
-
-        self._x = x
-        self._y = y
-        self._z = z
-        self._angle = angle
-        self._sx = sx
-        self._sy = sy
-        self._sz = sz
-        self._kx = kx
-        self._ky = ky
-
-        self._matrix \
+        self._matrix = Matrix() \
             .translate(x, y, z) \
             .rotate(angle) \
             .scale(sx, sy, sz) \
@@ -69,13 +57,11 @@ class Transform:
     def reflect(self):
         self._matrix.reflect()
 
+    def inverse(self):
+        self._matrix.inverse()
+
     def __repr__(self):
-        return 'Transform({},{},{},{},{},{},{},{},{})'.format(
-            self._x, self._y, self._z,
-            self._angle,
-            self._sx, self._sy, self._sz,
-            self._kx, self._ky
-        )
+        raise NotImplementedError
 
     def __str__(self):
         return str(self._matrix)

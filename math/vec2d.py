@@ -14,12 +14,16 @@ class Vec2D:
         self.x = x
         self.y = y
 
+    def unpack(self):
+        """Alias for `tuple()`."""
+        return self.tuple()
+
     def tuple(self):
-        """Unpack Vec2D into x, y-coordinates.
+        """Returns Vec2D as (x, y) tuple.
 
         Examples:
             >>> v1 = Vec2D(1, 2)
-            >>> x, y = v1.unpack()
+            >>> x, y = v1.tuple()
             >>> print(x)
             1
             >>> print(y)
@@ -29,7 +33,7 @@ class Vec2D:
             mixed, mixed
         """
 
-        return (self.x, self.y)
+        return self.x, self.y
 
     def copy(self):
         """Copy object.
@@ -50,6 +54,9 @@ class Vec2D:
 
     def scale(self, factor):
         """Scale Vec2D by factor.
+
+        Args:
+            factor(float): scale factor
 
         Examples:
             >>> v1 = Vec2D(1, 2)
@@ -102,17 +109,17 @@ class Vec2D:
 
         return math.sqrt(pow(self.x, 2) + pow(self.y, 2))
 
-    def setLength(self, len):
+    def setLength(self, length):
         """Alias for `setMagnitude`
 
         Args:
-            len(integer): new length
+            length(integer): new length
 
         Returns:
             void
         """
 
-        self.setMagnitude(mag)
+        self.setMagnitude(length)
 
     def magnitudeSq(self):
         """Alias for `lengthSq`
@@ -159,7 +166,7 @@ class Vec2D:
         Examples:
             >>> v1 = Vec2D(3, 4)
             >>> h1 = v1.heading()
-            >>> print(h1, math.degre3s(h1))
+            >>> print(h1, math.degrees(h1))
             0.9272952180016122 53.13010235415598
 
         Return:
@@ -199,7 +206,7 @@ class Vec2D:
 
         cos  = math.cos(angle)
         sin  = math.sin(angle)
-        x, y = self.unpack()
+        x, y = self.tuple()
 
         self.x = cos * x - sin * y
         self.y = sin * x + cos * y
@@ -413,7 +420,7 @@ class Vec2D:
         """Divide two vectors and return the resulting new Vec2D.
 
         Args:
-            other(Vec2D): other vector
+            other(mixed): other vector
 
         Returns:
             Vec2D: new Vec2D

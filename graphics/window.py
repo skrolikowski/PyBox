@@ -1,11 +1,15 @@
 import pyglet
 
+from pybox.physics.aabb import AABB
+
+
 class Window(pyglet.window.Window):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self._fps_display = pyglet.window.FPSDisplay(self)
-        self.fps = 1 / 120.0
+        self._fps = 1 / 120.0
+        self.fps = self._fps
 
     @property
     def fps(self):
@@ -17,6 +21,14 @@ class Window(pyglet.window.Window):
 
         pyglet.clock.unschedule(self.tick)
         pyglet.clock.schedule_interval(self.tick, value)
+
+    @property
+    def aabb(self):
+        return AABB(0, 0, self.width, self.height)
+
+    @property
+    def bounds(self):
+        return AABB(0, 0, self.width, self.height).unpack()
 
     def tick(self, dt):
         self.on_update(dt)

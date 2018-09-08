@@ -1,1 +1,1 @@
-from pybox.physics.shape2d import *
+from pybox.physics.aabb import AABB
